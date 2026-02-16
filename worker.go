@@ -11,6 +11,18 @@ import (
 	"github.com/romanqed/gqs/internal"
 )
 
+var (
+	// ErrKill indicates that the job must be permanently transitioned
+	// to Dead state without applying retry or backoff logic.
+	//
+	// When a MessageHandler returns ErrKill (or wraps it),
+	// the Worker immediately invokes Puller.Kill for the job.
+	//
+	// ErrKill is intended for unrecoverable business errors,
+	// such as validation failures or permanently invalid payloads.
+	ErrKill = errors.New("kill job")
+)
+
 // MessageHandler defines the user-provided function that processes
 // a message pulled from the queue.
 //
@@ -23,9 +35,18 @@ import (
 // semantics, and a message may be executed more than once if a worker
 // crashes or fails to complete it before the visibility timeout expires.
 //
-// If the handler returns nil, the job is marked as Done.
-// If the handler returns a non-nil error, the job is either retried
-// according to BackoffConfig or transitioned to Dead.
+// Return semantics:
+//
+//	nil
+//	    The job is marked as Done.
+//
+//	ErrKill (or an error wrapping ErrKill)
+//	    The job is permanently marked as Dead.
+//	    Retry and backoff logic are skipped.
+//
+//	any other non-nil error
+//	    The job is retried according to BackoffConfig.
+//	    If retry limits are exceeded, the job is transitioned to Dead.
 type MessageHandler func(ctx context.Context, msg *message.Message) error
 
 type errChan chan error
@@ -159,6 +180,12 @@ func (w *Worker) handle(ctx context.Context, jb *job.Job) {
 	}
 	if errors.Is(err, ErrLockLost) {
 		w.log.Warn("job lock lost", "id", jb.Id, "err", err)
+		return
+	}
+	if errors.Is(err, ErrKill) {
+		if err := w.puller.Kill(ctx, jb); err != nil {
+			w.log.Error("cannot kill job", "id", jb.Id, "err", err)
+		}
 		return
 	}
 	backoff, ok := w.backoff.next(jb.Attempts)

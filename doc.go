@@ -90,6 +90,11 @@
 // Shutdown is graceful: in-flight handlers are allowed to finish,
 // subject to a configurable timeout.
 //
+// # Immediate termination
+//
+// A handler may return ErrKill to permanently mark a job as Dead
+// without applying retry or backoff logic.
+//
 // # Storage Expectations
 //
 // Implementations of Puller must ensure atomic state transitions,
