@@ -2,10 +2,11 @@ package sql
 
 import (
 	"context"
-	"github.com/romanqed/gqs"
-	"github.com/romanqed/gqs/job"
-	"github.com/uptrace/bun"
 	"time"
+
+	"github.com/romanqed/gqs/v2"
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/uptrace/bun"
 )
 
 // Puller implements gqs.Puller using a SQL backend.
@@ -55,7 +56,7 @@ func NewPuller(db *bun.DB) *Puller {
 // Pull relies on a single UPDATE ... WHERE id IN (subquery)
 // statement with RETURNING to avoid race conditions between
 // selection and state transition.
-func (p *Puller) Pull(ctx context.Context, batch int, lock time.Duration) ([]*job.Job, error) {
+func (p *Puller) Pull(ctx context.Context, batch int64, lock time.Duration) ([]*job.Job, error) {
 	now := time.Now()
 	lockUntil := now.Add(lock)
 	subQuery := p.db.NewSelect().

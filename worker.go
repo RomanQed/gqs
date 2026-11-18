@@ -3,12 +3,13 @@ package gqs
 import (
 	"context"
 	"errors"
-	"github.com/romanqed/gqs/job"
-	"github.com/romanqed/gqs/message"
 	"log/slog"
 	"time"
 
-	"github.com/romanqed/gqs/internal"
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/romanqed/gqs/v2/message"
+
+	"github.com/romanqed/gqs/v2/internal"
 )
 
 var (
@@ -69,7 +70,7 @@ type errChan chan error
 type WorkerConfig struct {
 	Concurrency  int
 	Queue        int
-	BatchSize    int
+	BatchSize    int64
 	PullInterval time.Duration
 	LockTimeout  time.Duration
 	Backoff      BackoffConfig
@@ -101,7 +102,7 @@ type Worker struct {
 	pool      *internal.WorkerPool[*job.Job]
 	log       *slog.Logger
 	handler   MessageHandler
-	batchSize int
+	batchSize int64
 	interval  time.Duration
 	lock      time.Duration
 	halfLock  time.Duration

@@ -5,7 +5,7 @@ import (
 	"database/sql"
 	"testing"
 
-	gsql "github.com/romanqed/gqs/sql"
+	gsql "github.com/romanqed/gqs/sql/v2"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
 

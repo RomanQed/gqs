@@ -1,9 +1,10 @@
 package sql
 
 import (
-	"github.com/romanqed/gqs/job"
-	"github.com/romanqed/gqs/message"
 	"time"
+
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/romanqed/gqs/v2/message"
 
 	"github.com/google/uuid"
 	"github.com/uptrace/bun"
@@ -21,16 +22,16 @@ type jobModel struct {
 	LockedUntil *time.Time `bun:"locked_until,nullzero,default:null"`
 	NextRunAt   time.Time  `bun:"next_run_at,notnull"`
 
-	Metadata map[string]any `bun:"metadata,type:jsonb"`
-	Payload  []byte         `bun:"payload,type:blob"`
+	Data    map[string]any `bun:"data,type:jsonb"`
+	Payload []byte         `bun:"payload,type:blob"`
 }
 
 func (jm *jobModel) toJob() *job.Job {
 	return &job.Job{
 		Message: message.Message{
-			Id:       jm.Id,
-			Metadata: jm.Metadata,
-			Payload:  jm.Payload,
+			Id:      jm.Id,
+			Data:    jm.Data,
+			Payload: jm.Payload,
 		},
 		CreatedAt:   jm.CreatedAt,
 		UpdatedAt:   jm.UpdatedAt,
@@ -45,7 +46,7 @@ func fromMessage(msg *message.Message, delay time.Duration) *jobModel {
 	now := time.Now()
 	return &jobModel{
 		Id:          msg.Id,
-		Metadata:    msg.Metadata,
+		Data:        msg.Data,
 		Payload:     msg.Payload,
 		CreatedAt:   now,
 		UpdatedAt:   now,

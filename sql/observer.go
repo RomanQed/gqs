@@ -4,8 +4,9 @@ import (
 	"context"
 	"database/sql"
 	"errors"
+
 	"github.com/google/uuid"
-	"github.com/romanqed/gqs/job"
+	"github.com/romanqed/gqs/v2/job"
 	"github.com/uptrace/bun"
 )
 
@@ -68,7 +69,7 @@ func (o *Observer) Get(ctx context.Context, id uuid.UUID) (*job.Job, error) {
 //
 // List is intended for administrative or diagnostic use and
 // should not be used as part of normal job consumption logic.
-func (o *Observer) List(ctx context.Context, status job.Status, limit int) ([]*job.Job, error) {
+func (o *Observer) List(ctx context.Context, status job.Status, limit int64) ([]*job.Job, error) {
 	var ret []*job.Job
 	query := o.db.NewSelect().Model((*jobModel)(nil))
 	if status != 0 {

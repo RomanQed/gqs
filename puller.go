@@ -3,8 +3,9 @@ package gqs
 import (
 	"context"
 	"errors"
-	"github.com/romanqed/gqs/job"
 	"time"
+
+	"github.com/romanqed/gqs/v2/job"
 )
 
 var (
@@ -62,7 +63,7 @@ type Puller interface {
 	// The returned jobs represent authoritative storage state.
 	//
 	// If ctx is canceled, Pull should abort and return an error.
-	Pull(ctx context.Context, batch int, lock time.Duration) ([]*job.Job, error)
+	Pull(ctx context.Context, batch int64, lock time.Duration) ([]*job.Job, error)
 
 	// ExtendLock extends the visibility timeout of a job currently in
 	// the Processing state.

@@ -2,9 +2,10 @@ package gqs
 
 import (
 	"errors"
-	"github.com/romanqed/gqs/internal"
 	"sync/atomic"
 	"time"
+
+	"github.com/romanqed/gqs/v2/internal"
 )
 
 const (

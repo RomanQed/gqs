@@ -10,24 +10,24 @@ import (
 // metadata, and an opaque payload. Message does not track delivery state
 // or retry information.
 //
-// Id is generated automatically by NewMessage, but may also be assigned
+// Id is generated automatically by New, but may also be assigned
 // explicitly before pushing the message into a queue.
 //
-// Metadata is optional and lazily initialized. It may be nil if no metadata
+// Data is optional and lazily initialized. It may be nil if no metadata
 // has been set.
 //
 // Payload contains arbitrary binary data and may be nil.
 type Message struct {
-	Id       uuid.UUID
-	Metadata map[string]any
-	Payload  []byte
+	Id      uuid.UUID
+	Data    map[string]any
+	Payload []byte
 }
 
-// NewMessage creates a new Message with a randomly generated UUID.
+// New creates a new Message with a randomly generated UUID.
 //
 // The returned Message has no metadata and no payload.
 // Metadata will be allocated lazily when Set is called.
-func NewMessage() *Message {
+func New() *Message {
 	return &Message{
 		Id: uuid.New(),
 	}
@@ -35,35 +35,23 @@ func NewMessage() *Message {
 
 // Get returns the metadata value associated with the given key.
 //
-// If the key does not exist or Metadata is nil, Get returns nil.
-//
-// The returned value has static type any. For type-safe access,
-// use the generic Get function.
-func (m *Message) Get(key string) any {
-	ret, ok := m.Metadata[key]
+// If the key does not exist or Data is nil, Get returns default value for T.
+func (m *Message) Get[T any](key string) T {
+	raw, ok := m.Data[key]
 	if !ok {
-		return nil
+		var t T
+		return t
+	}
+	ret, ok := raw.(T)
+	if !ok {
+		var t T
+		return t
 	}
 	return ret
 }
 
-// Set stores the given key-value pair in the message metadata.
-//
-// If Metadata is nil, it is initialized automatically.
-func (m *Message) Set(key string, value any) {
-	if m.Metadata == nil {
-		m.Metadata = make(map[string]any)
-	}
-	m.Metadata[key] = value
-}
-
-// Get retrieves a metadata value associated with the given key and
-// attempts to cast it to type T.
-//
-// If the key does not exist or the stored value is not of type T,
-// Get returns the zero value of T and false.
-func Get[T any](m *Message, key string) (T, bool) {
-	raw, ok := m.Metadata[key]
+func (m *Message) TryGet[T any](key string) (T, bool) {
+	raw, ok := m.Data[key]
 	if !ok {
 		var t T
 		return t, false
@@ -76,13 +64,12 @@ func Get[T any](m *Message, key string) (T, bool) {
 	return ret, true
 }
 
-// Set stores the given key-value pair in the message metadata
-// using a type-safe generic helper.
+// Set stores the given key-value pair in the message metadata.
 //
-// If Metadata is nil, it is initialized automatically.
-func Set[T any](m *Message, key string, value T) {
-	if m.Metadata == nil {
-		m.Metadata = make(map[string]any)
+// If Data is nil, it is initialized automatically.
+func (m *Message) Set(key string, value any) {
+	if m.Data == nil {
+		m.Data = make(map[string]any)
 	}
-	m.Metadata[key] = value
+	m.Data[key] = value
 }

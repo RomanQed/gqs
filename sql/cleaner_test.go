@@ -5,20 +5,21 @@ import (
 	"testing"
 	"time"
 
-	"github.com/romanqed/gqs/job"
-	"github.com/romanqed/gqs/message"
-	gsql "github.com/romanqed/gqs/sql"
+	gsql "github.com/romanqed/gqs/sql/v2"
+	"github.com/romanqed/gqs/v2"
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/romanqed/gqs/v2/message"
 )
 
 func TestCleaner(t *testing.T) {
 	db := newTestDB(t)
 	ctx := context.Background()
 
-	pusher := gsql.NewPusher(db)
-	puller := gsql.NewPuller(db)
-	cleaner := gsql.NewCleaner(db)
+	var pusher gqs.Pusher = gsql.NewPusher(db)
+	var puller gqs.Puller = gsql.NewPuller(db)
+	var cleaner gqs.Cleaner = gsql.NewCleaner(db)
 
-	msg := message.NewMessage()
+	msg := message.New()
 	if err := pusher.Push(ctx, msg, 0); err != nil {
 		t.Fatal(err)
 	}

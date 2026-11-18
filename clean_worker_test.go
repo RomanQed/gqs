@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/romanqed/gqs"
-	"github.com/romanqed/gqs/job"
+	"github.com/romanqed/gqs/v2"
+	"github.com/romanqed/gqs/v2/job"
 )
 
 type mockCleaner struct {

@@ -2,8 +2,9 @@ package gqs
 
 import (
 	"context"
-	"github.com/romanqed/gqs/message"
 	"time"
+
+	"github.com/romanqed/gqs/v2/message"
 )
 
 // Pusher defines the write-side entry point of a queue.

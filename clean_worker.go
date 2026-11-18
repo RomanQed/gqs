@@ -2,10 +2,11 @@ package gqs
 
 import (
 	"context"
-	"github.com/romanqed/gqs/internal"
-	"github.com/romanqed/gqs/job"
 	"log/slog"
 	"time"
+
+	"github.com/romanqed/gqs/v2/internal"
+	"github.com/romanqed/gqs/v2/job"
 )
 
 // CleanConfig defines the scheduling and filtering parameters

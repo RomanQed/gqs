@@ -2,8 +2,9 @@ package gqs
 
 import (
 	"context"
+
 	"github.com/google/uuid"
-	"github.com/romanqed/gqs/job"
+	"github.com/romanqed/gqs/v2/job"
 )
 
 // Observer provides read-only access to jobs stored in the queue.
@@ -40,5 +41,5 @@ type Observer interface {
 	//
 	// List is intended for inspection and administrative tools and should
 	// not be used as part of the normal consumption workflow.
-	List(ctx context.Context, status job.Status, limit int) ([]*job.Job, error)
+	List(ctx context.Context, status job.Status, limit int64) ([]*job.Job, error)
 }

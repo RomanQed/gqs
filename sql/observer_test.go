@@ -4,21 +4,22 @@ import (
 	"context"
 	"testing"
 
-	"github.com/romanqed/gqs/job"
-	"github.com/romanqed/gqs/message"
-	gsql "github.com/romanqed/gqs/sql"
+	gsql "github.com/romanqed/gqs/sql/v2"
+	"github.com/romanqed/gqs/v2"
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/romanqed/gqs/v2/message"
 )
 
 func TestPusherAndObserver(t *testing.T) {
 	db := newTestDB(t)
 	ctx := context.Background()
 
-	pusher := gsql.NewPusher(db)
-	observer := gsql.NewObserver(db)
+	var pusher gqs.Pusher = gsql.NewPusher(db)
+	var observer gqs.Observer = gsql.NewObserver(db)
 
 	msg := &message.Message{
-		Metadata: map[string]any{"a": 1},
-		Payload:  []byte("data"),
+		Data:    map[string]any{"a": 1},
+		Payload: []byte("data"),
 	}
 
 	if err := pusher.Push(ctx, msg, 0); err != nil {

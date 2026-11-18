@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/romanqed/gqs"
-	"github.com/romanqed/gqs/job"
-	"github.com/romanqed/gqs/message"
-	gsql "github.com/romanqed/gqs/sql"
+	gsql "github.com/romanqed/gqs/sql/v2"
+	"github.com/romanqed/gqs/v2"
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/romanqed/gqs/v2/message"
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
 
@@ -68,7 +68,7 @@ func TestWorkerProcessesJob(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	msg := message.NewMessage()
+	msg := message.New()
 	if err := pusher.Push(ctx, msg, 0); err != nil {
 		t.Fatal(err)
 	}
@@ -133,7 +133,7 @@ func TestWorkerRetry(t *testing.T) {
 
 	_ = worker.Start(ctx)
 
-	msg := message.NewMessage()
+	msg := message.New()
 	_ = pusher.Push(ctx, msg, 0)
 
 	time.Sleep(300 * time.Millisecond)
@@ -174,7 +174,7 @@ func TestWorkerKillShortcut(t *testing.T) {
 
 	_ = worker.Start(ctx)
 
-	msg := message.NewMessage()
+	msg := message.New()
 	_ = pusher.Push(ctx, msg, 0)
 
 	time.Sleep(200 * time.Millisecond)

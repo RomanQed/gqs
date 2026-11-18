@@ -2,10 +2,11 @@ package sql
 
 import (
 	"context"
-	"github.com/romanqed/gqs"
-	"github.com/romanqed/gqs/job"
-	"github.com/uptrace/bun"
 	"time"
+
+	"github.com/romanqed/gqs/v2"
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/uptrace/bun"
 )
 
 // Cleaner implements gqs.Cleaner using a SQL backend.

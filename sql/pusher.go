@@ -2,9 +2,10 @@ package sql
 
 import (
 	"context"
-	"github.com/romanqed/gqs/message"
-	"github.com/uptrace/bun"
 	"time"
+
+	"github.com/romanqed/gqs/v2/message"
+	"github.com/uptrace/bun"
 )
 
 // Pusher implements gqs.Pusher using a SQL backend.

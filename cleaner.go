@@ -3,8 +3,9 @@ package gqs
 import (
 	"context"
 	"errors"
-	"github.com/romanqed/gqs/job"
 	"time"
+
+	"github.com/romanqed/gqs/v2/job"
 )
 
 var (

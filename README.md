@@ -31,13 +31,13 @@ To use this library, you will need:
 ### Core module
 
 ```bash
-go get github.com/romanqed/gqs@v1.0.0
+go get github.com/romanqed/gqs/v2@v2.0.0
 ```
 
 ### SQL backend
 
 ```bash
-go get github.com/romanqed/gqs/sql@v1.0.0
+go get github.com/romanqed/gqs/sql/v2@v2.0.0
 ```
 
 ## Usage Examples
@@ -53,9 +53,9 @@ import (
 	"log"
 	"time"
 
-	"github.com/romanqed/gqs"
-	gsql "github.com/romanqed/gqs/sql"
-	"github.com/romanqed/gqs/message"
+	"github.com/romanqed/gqs/v2"
+	gsql "github.com/romanqed/gqs/sql/v2"
+	"github.com/romanqed/gqs/v2/message"
 
 	"github.com/uptrace/bun"
 	"github.com/uptrace/bun/dialect/sqlitedialect"
@@ -82,7 +82,7 @@ func main() {
 	puller := gsql.NewPuller(db)
 
 	handler := func(ctx context.Context, msg *message.Message) error {
-		log.Printf("processing: %v\n", msg.Metadata)
+		log.Printf("processing: %v\n", msg.Data)
 		return nil
 	}
 
@@ -98,7 +98,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	msg := message.NewMessage()
+	msg := message.New()
 	msg.Set("hello", "world")
 
 	if err := pusher.Push(ctx, msg, 0); err != nil {
@@ -178,7 +178,7 @@ For SQLite, it is strongly recommended to:
 
 * [Go](https://go.dev)
 * [bun](https://bun.uptrace.dev/) — SQL builder
-* [modernc SQLite](https://pkg.go.dev/modernc.org/sqlite) (optional)
+* [modernc SQLite](https://pkg.go.dev/modernc.org/sqlite) (test dependency)
 
 ## Authors
 

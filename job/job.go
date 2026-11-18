@@ -1,8 +1,9 @@
 package job
 
 import (
-	"github.com/romanqed/gqs/message"
 	"time"
+
+	"github.com/romanqed/gqs/v2/message"
 )
 
 // Job represents a message managed by the queue storage.

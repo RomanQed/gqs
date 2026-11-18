@@ -5,19 +5,20 @@ import (
 	"testing"
 	"time"
 
-	"github.com/romanqed/gqs/job"
-	"github.com/romanqed/gqs/message"
-	gsql "github.com/romanqed/gqs/sql"
+	gsql "github.com/romanqed/gqs/sql/v2"
+	"github.com/romanqed/gqs/v2"
+	"github.com/romanqed/gqs/v2/job"
+	"github.com/romanqed/gqs/v2/message"
 )
 
 func TestPullAndComplete(t *testing.T) {
 	db := newTestDB(t)
 	ctx := context.Background()
 
-	pusher := gsql.NewPusher(db)
-	puller := gsql.NewPuller(db)
+	var pusher gqs.Pusher = gsql.NewPusher(db)
+	var puller gqs.Puller = gsql.NewPuller(db)
 
-	msg := message.NewMessage()
+	msg := message.New()
 
 	if err := pusher.Push(ctx, msg, 0); err != nil {
 		t.Fatal(err)
@@ -48,10 +49,10 @@ func TestPullAndReturn(t *testing.T) {
 	db := newTestDB(t)
 	ctx := context.Background()
 
-	pusher := gsql.NewPusher(db)
-	puller := gsql.NewPuller(db)
+	var pusher gqs.Pusher = gsql.NewPusher(db)
+	var puller gqs.Puller = gsql.NewPuller(db)
 
-	msg := message.NewMessage()
+	msg := message.New()
 	if err := pusher.Push(ctx, msg, 0); err != nil {
 		t.Fatal(err)
 	}
@@ -76,10 +77,10 @@ func TestPullAndKill(t *testing.T) {
 	db := newTestDB(t)
 	ctx := context.Background()
 
-	pusher := gsql.NewPusher(db)
-	puller := gsql.NewPuller(db)
+	var pusher gqs.Pusher = gsql.NewPusher(db)
+	var puller gqs.Puller = gsql.NewPuller(db)
 
-	msg := message.NewMessage()
+	msg := message.New()
 	if err := pusher.Push(ctx, msg, 0); err != nil {
 		t.Fatal(err)
 	}
@@ -104,10 +105,10 @@ func TestExtendLock(t *testing.T) {
 	db := newTestDB(t)
 	ctx := context.Background()
 
-	pusher := gsql.NewPusher(db)
-	puller := gsql.NewPuller(db)
+	var pusher gqs.Pusher = gsql.NewPusher(db)
+	var puller gqs.Puller = gsql.NewPuller(db)
 
-	msg := message.NewMessage()
+	msg := message.New()
 	if err := pusher.Push(ctx, msg, 0); err != nil {
 		t.Fatal(err)
 	}
@@ -132,10 +133,10 @@ func TestLeaseExpiration(t *testing.T) {
 	db := newTestDB(t)
 	ctx := context.Background()
 
-	pusher := gsql.NewPusher(db)
-	puller := gsql.NewPuller(db)
+	var pusher gqs.Pusher = gsql.NewPusher(db)
+	var puller gqs.Puller = gsql.NewPuller(db)
 
-	msg := message.NewMessage()
+	msg := message.New()
 	_ = pusher.Push(ctx, msg, 0)
 
 	_, _ = puller.Pull(ctx, 1, time.Millisecond*50)
